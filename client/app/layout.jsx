@@ -13,7 +13,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-[#fafafa]`}>
+      <body
+        className={`${inter.className} bg-[#fafafa] flex flex-col items-center`}
+      >
         <Nav />
         {children}
       </body>
