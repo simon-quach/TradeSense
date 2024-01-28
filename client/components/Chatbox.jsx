@@ -42,14 +42,11 @@ const Chatbox = ({ toggleChat, setToggleChat, stockInfo }) => {
     }, 100);
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/openai/generate",
-        {
-          prompt: message,
-          symbol: symbol,
-          stockInfo: JSON.stringify(stockInfo),
-        }
-      );
+      const response = await axios.post("http://54.196.72.92/openai/generate", {
+        prompt: message,
+        symbol: symbol,
+        stockInfo: JSON.stringify(stockInfo),
+      });
 
       setLoading(false);
 
