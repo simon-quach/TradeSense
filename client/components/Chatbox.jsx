@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import axios from "axios";
 
 // Images
@@ -10,7 +11,7 @@ import AiPfp from "@/assets/icons/ai-pfp.svg";
 import UserPfp from "@/assets/icons/user-pfp.svg";
 import Send from "@/assets/icons/send.svg";
 
-const Chatbox = ({ toggleChat, setToggleChat }) => {
+const Chatbox = ({ toggleChat, setToggleChat, stockInfo }) => {
   const [conversation, setConversation] = useState([
     { sender: "bot", message: "What can I assist you with today?" },
   ]); // [ { sender: "user", message: "hello" }, { sender: "bot", message: "hi" }
@@ -23,38 +24,44 @@ const Chatbox = ({ toggleChat, setToggleChat }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const pathname = usePathname();
+  const symbol = pathname.replace("/stock/", "");
+
   useEffect(() => {
     scrollToBottom();
-  }, [conversation]); // Dependency array includes conversation
+  }, [conversation, loading]); // Dependency array includes conversation
 
   const sendMessage = async (e) => {
     e.preventDefault();
 
     const newConversation = [...conversation, { sender: "user", message }];
     setConversation(newConversation);
+    setMessage("");
+    setTimeout(() => {
+      setLoading(true);
+    }, 100);
 
     try {
-      // Send the post request immediately
       const response = await axios.post(
         "http://127.0.0.1:8000/openai/generate",
-        { prompt: message }
+        {
+          prompt: message,
+          symbol: symbol,
+          stockInfo: JSON.stringify(stockInfo),
+        }
       );
 
-      // Introduce a slight delay before updating the conversation
-      setTimeout(() => {
-        setLoading(false);
-        setConversation([
-          ...newConversation,
-          { sender: "bot", message: response.data },
-        ]);
-        setMessage("");
-      }, 500); // Delay in milliseconds, e.g., 500ms
+      setLoading(false);
+
+      setConversation([
+        ...newConversation,
+        { sender: "bot", message: response.data },
+      ]);
     } catch (error) {
       console.error("Error sending message:", error);
       setLoading(false);
     } finally {
       // Show loading immediately, but only hide it after a delay
-      setLoading(true);
     }
   };
 

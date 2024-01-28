@@ -11,52 +11,57 @@ router = APIRouter()
 
 client = OpenAI(
     organization="org-Fk56Pol0i7pW7x9Ep8lbv7e0",
-    api_key = os.getenv("OPEN_API_KEY")
 )
 
 
-async def call_openai_api(prompt: str):
-    prompt_form = '''
-    Sample User Input Prompt: Can you tell me about AAPL?
+async def call_openai_api(prompt: str, symbol: str, stockInfo: str):
+    user_prompt = f"""The symbol we are looking at is {symbol}. Stock information: {stockInfo}
 
-    Output:
-    AAPL is the ticker symbol for Apple Inc., a leading technology company listed primarily on the NASDAQ stock exchange. 
-    It's widely traded with high liquidity and significant market impact, often influencing broader market indices. 
-    Apple's stock is known for its history of dividends, share buybacks, and extensive analyst coverage. 
-    Overall, AAPL represents one of the world's most valuable and influential companies in the technology sector.
-    '''
+    User prompt:
+    ###
+     {prompt}
+    ###
+    
+    """
+    print(user_prompt)
+    system_message = """You are a knowledgeable financial assistant that will assist the user with specific inquiries about Stocker Tickers. You will provide a comprehensive yet concise answer regarding user inquiries of the stock. Be very conversational and friendly.
+    
+    Example:
+    ###
+    User inputted: What is the current price of AAPL?
+    System response: The current price of AAPL is $127.45.
+    ###
+    """
+
     response = client.chat.completions.create(
-
         model="gpt-3.5-turbo",
-        stream=True,
         messages=[
             {
                 "role": "system",
-                "content": "You are a ChatBot that will assist the user with specific inquiries about Stocker Tickers. You will provide a comprehensive yet concise answer regarding user inquiries of the stock.",
+                "content": system_message,
             },
             {
                 "role": "user",
-                "content": prompt,
+                "content": user_prompt,
             },
         ],
     )
-    answer = ''
-    for chunk in response:
-        data = chunk['choices'][0]
-        if data['finish_reason'] is not None:
-            break
-        answer += data['delta']['content']
-    return answer
+    return response.choices[0].message.content
 
 
 class GenerateRequest(BaseModel):
     prompt: str
+    symbol: str
+    stockInfo: str
 
 
 @router.post("/generate")
 async def generate_text(request: GenerateRequest):
+    print(request.stockInfo)
     try:
-        response = await call_openai_api(request.prompt)
+        response = await call_openai_api(
+            request.prompt, request.symbol, request.stockInfo
+        )
         return response
     except Exception as e:
         print(e)
