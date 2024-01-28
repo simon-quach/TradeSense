@@ -22,6 +22,11 @@ app.include_router(openai, prefix="/openai")
 app.include_router(scraper, prefix="/scrape")
 
 
+@app.get("/")
+async def root():
+    return {"message": "TradeSense Server"}
+
+
 @app.get("/stock/{ticker}")
 async def get_stock(ticker: str):
     stock = yf.Ticker(ticker)
