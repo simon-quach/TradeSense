@@ -1,11 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import { AreaChart, Card, Title } from "@tremor/react";
+import Image from "next/image";
+
+import Chatbox from "@/components/Chatbox";
+
+import Chat from "@/assets/icons/chat.svg";
 
 export default function Stock() {
   const [ws, setWs] = useState(null);
   const [symbol, setSymbol] = useState("");
   const [stockData, setStockData] = useState([]);
+  const [toggleChat, setToggleChat] = useState(false);
 
   useEffect(() => {
     // Establish the WebSocket connection
@@ -61,6 +67,17 @@ export default function Stock() {
           valueFormatter={valueFormatter}
         />
       </Card>
+
+      <div
+        className={`bg-[#2865EC] w-[50px] h-[50px] rounded-full flex justify-center items-center fixed bottom-[1.5rem] right-[1.5rem] cursor-pointer`}
+        onClick={() => setToggleChat(!toggleChat)}
+      >
+        <Image src={Chat} quality={100} alt="chat-icon" />
+      </div>
+
+      {toggleChat && (
+        <Chatbox toggleChat={toggleChat} setToggleChat={setToggleChat} />
+      )}
     </div>
   );
 }
