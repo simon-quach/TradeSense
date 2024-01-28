@@ -1,4 +1,5 @@
 Introduction:
+------------------------------------------------------------------------------------------------------------
 Navigate the complexities of the stock market with our cutting-edge ML stock risk analysis app. 
 Leveraging the power of sentiment analysis and risk assessment, we offer investors a comprehensive tool 
 to evaluate the potential risk and reward of their stock choices.
