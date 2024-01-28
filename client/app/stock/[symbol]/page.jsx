@@ -20,7 +20,7 @@ export default function Stock() {
 
   useEffect(() => {
     const fetchStockInfo = async () => {
-      const response = await axios.get(`http://54.196.72.92/stock/${symbol}`);
+      const response = await axios.get(`http://127.0.0.1:8000/stock/${symbol}`);
       setStockInfo(response.data);
     };
     fetchStockInfo();
@@ -30,7 +30,7 @@ export default function Stock() {
     if (!symbol) return;
 
     // Establish the WebSocket connection
-    const ws = new WebSocket("ws://54.196.72.92/ws");
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws");
 
     ws.onopen = () => {
       ws.send(symbol); // Send symbol when connection is open
