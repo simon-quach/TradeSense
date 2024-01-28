@@ -7,7 +7,7 @@ to evaluate the potential risk and reward of their stock choices.
 Key Features:
 1. Sentiment Analysis:
 Utilizes machine learning models to analyze earnings calls, earnings reviews, and news articles.
-Powered by AWS SageMaker with TensorFlow for high-accuracy text classification (See SageMaker documentation).
+Powered by AWS SageMaker with TensorFlow for high-accuracy text classification.
 
 2. Risk Scoring:
 Generates a risk score based on stock beta and sentiment volatility.
