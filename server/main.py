@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import yfinance as yf
 from routers.websocket import router as websocket
 from routers.openai import router as openai
+from routers.scrape import router as scraper
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -18,6 +19,7 @@ app.add_middleware(
 
 app.include_router(websocket)
 app.include_router(openai, prefix="/openai")
+app.include_router(scraper, prefix="/scrape")
 
 
 @app.get("/stock/{ticker}")
