@@ -104,10 +104,6 @@ async def execute(ticker):
     fool_thread.join()
     # bloom_thread.join()
 
-    # output = json.dumps(dataset)
-
-    # return output
-
     return dataset
     
     # return JSON dumped
@@ -119,7 +115,6 @@ class ScrapedData(BaseModel):
 async def send_data(request: ScrapedData):
     try:
         response = await execute(request.scraped_data)
-        # print(response)
         return response
     except Exception as e:
         print(e)
