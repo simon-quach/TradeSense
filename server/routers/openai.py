@@ -11,6 +11,7 @@ router = APIRouter()
 
 client = OpenAI(
     organization="org-Fk56Pol0i7pW7x9Ep8lbv7e0",
+    api_key=os.getenv("OPENAI_API_KEY"),
 )
 
 
