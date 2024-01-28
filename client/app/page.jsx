@@ -1,56 +1,66 @@
 "use client";
+import { useEffect, useState } from "react";
 import { AreaChart, Card, Title } from "@tremor/react";
 
-const chartdata = [
-  {
-    date: "Jan 22",
-    SemiAnalysis: 2890,
-    "The Pragmatic Engineer": 2338,
-  },
-  {
-    date: "Feb 22",
-    SemiAnalysis: 2756,
-    "The Pragmatic Engineer": 2103,
-  },
-  {
-    date: "Mar 22",
-    SemiAnalysis: 3322,
-    "The Pragmatic Engineer": 2194,
-  },
-  {
-    date: "Apr 22",
-    SemiAnalysis: 3470,
-    "The Pragmatic Engineer": 2108,
-  },
-  {
-    date: "May 22",
-    SemiAnalysis: 3475,
-    "The Pragmatic Engineer": 1812,
-  },
-  {
-    date: "Jun 22",
-    SemiAnalysis: 3129,
-    "The Pragmatic Engineer": 1726,
-  },
-];
-
-const valueFormatter = function (number) {
-  return "$ " + new Intl.NumberFormat("us").format(number).toString();
-};
-
 export default function Home() {
+  const [ws, setWs] = useState(null);
+  const [symbol, setSymbol] = useState("");
+  const [stockData, setStockData] = useState([]);
+
+  useEffect(() => {
+    // Establish the WebSocket connection
+    const newWebSocket = new WebSocket("ws://localhost:8000/ws");
+
+    newWebSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setStockData(data); // Update stock data
+    };
+
+    setWs(newWebSocket);
+
+    return () => {
+      newWebSocket.close(); // Clean up WebSocket on component unmount
+    };
+  }, []); // Empty dependency array to run once on mount
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (ws && symbol) {
+      ws.send(symbol); // Send the symbol only on form submission
+    }
+  };
+
+  const valueFormatter = function (number) {
+    return "$ " + new Intl.NumberFormat("us").format(number).toString();
+  };
+
   return (
-    <Card>
-      <Title>Newsletter revenue over time (USD)</Title>
-      <AreaChart
-        className="h-72 mt-4"
-        data={chartdata}
-        index="date"
-        yAxisWidth={65}
-        categories={["SemiAnalysis", "The Pragmatic Engineer"]}
-        colors={["indigo", "cyan"]}
-        valueFormatter={valueFormatter}
-      />
-    </Card>
+    <div>
+      <div>Enter stock symbol:</div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={symbol}
+          onChange={(e) => setSymbol(e.target.value)}
+          className="border"
+        />
+        <button type="submit" className="border">
+          enter
+        </button>
+      </form>
+
+      <Card>
+        <Title>Stock Data</Title>
+        <AreaChart
+          className="h-72 mt-4"
+          data={stockData}
+          index="date"
+          yAxisWidth={65}
+          categories={["price"]}
+          colors={["indigo"]}
+          valueFormatter={valueFormatter}
+        />
+      </Card>
+    </div>
   );
 }
