@@ -75,7 +75,9 @@ export default function Stock() {
         <Image src={Chat} quality={100} alt="chat-icon" />
       </div>
 
-      {toggleChat && <Chatbox />}
+      {toggleChat && (
+        <Chatbox toggleChat={toggleChat} setToggleChat={setToggleChat} />
+      )}
     </div>
   );
 }

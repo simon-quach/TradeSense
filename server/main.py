@@ -3,10 +3,20 @@ from fastapi import FastAPI
 import yfinance as yf
 from routers.websocket import router as websocket
 from routers.openai import router as openai
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 
-app.include_router(websocket, prefix="/ws")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(websocket)
 app.include_router(openai, prefix="/openai")
 
 
