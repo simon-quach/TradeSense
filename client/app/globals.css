@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import '~three-dots/dist/three-dots.css';
+
+/* Custom overrides for dot-carousel */
+.dot-carousel {
+  background-color: #2865EC; /* New background color */
+  box-shadow: 
+    9984px 0 0 0 #2865EC, /* New box shadow color */
+    9999px 0 0 0 #2865EC, /* New box shadow color */
+    10014px 0 0 0 #2865EC; /* New box shadow color */
+}
+
+/* Override keyframes for dot-carousel to maintain new color */
+@keyframes dot-carousel {
+  0% {
+    box-shadow: 
+      9984px 0 0 -1px #2865EC, 
+      9999px 0 0 1px #2865EC, 
+      10014px 0 0 -1px #2865EC;
+  }
+  50% {
+    box-shadow: 
+      10014px 0 0 -1px #2865EC, 
+      9984px 0 0 -1px #2865EC, 
+      9999px 0 0 1px #2865EC;
+  }
+  100% {
+    box-shadow: 
+      9999px 0 0 1px #2865EC, 
+      10014px 0 0 -1px #2865EC, 
+      9984px 0 0 -1px #2865EC;
+  }
+}

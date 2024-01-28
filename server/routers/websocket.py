@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore", category=FutureWarning, module="yfinance.*")
 router = APIRouter()
 
 
-@router.websocket("/")
+@router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     try:
